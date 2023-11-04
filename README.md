@@ -21,7 +21,7 @@ You can download pre compiled cli tool from below, or you can build it from sour
 | x86_64-pc-windows-msvc | 64-bit MSVC (Windows 7+) | - |
 | x86_64-unknown-linux-gnu | 64-bit Linux (kernel 3.2+, glibc 2.17+) | - |
 
-**If your OS is not listed here, you can compile the project from the source code.*
+> If your OS is not listed here, you can build the project from the source code.
 
 
 ### Building from source
@@ -41,7 +41,7 @@ cargo build
 
 ## Usage
 
-This tool downloads your pull request data and runs commands on the offline data. If you need to update your data see [fetch](#fetch) command.
+The tool downloads your pull request data and runs commands on the offline data. If you need to update your data see [fetch](#fetch-fetch) command.
 
 > You can see the date and time the your data was downloaded after running any stat command.
 
