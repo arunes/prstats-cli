@@ -1,3 +1,9 @@
+mod args;
+use args::App;
+use clap::Parser;
+
 fn main() {
-    println!("Hello, world!");
+    let app = App::parse();
+
+    println!("{app:?}");
 }
