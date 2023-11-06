@@ -15,11 +15,11 @@ You can download pre compiled cli tool from below, or you can build it from sour
 
 ### Download 
 
-| Target | OS | Download |
-|--|--|--|
-| x86_64-apple-darwin | 64-bit macOS (10.12+, Sierra+) | - |
-| x86_64-pc-windows-msvc | 64-bit MSVC (Windows 7+) | - |
-| x86_64-unknown-linux-gnu | 64-bit Linux (kernel 3.2+, glibc 2.17+) | - |
+| Target                   | OS                                      | Download |
+| ------------------------ | --------------------------------------- | -------- |
+| x86_64-apple-darwin      | 64-bit macOS (10.12+, Sierra+)          | -        |
+| x86_64-pc-windows-msvc   | 64-bit MSVC (Windows 7+)                | -        |
+| x86_64-unknown-linux-gnu | 64-bit Linux (kernel 3.2+, glibc 2.17+) | -        |
 
 > If your OS is not listed here, you can build the project from the source code.
 
@@ -50,17 +50,17 @@ The tool downloads your pull request data and runs commands on the offline data.
 Gets pull request stats.
 
 ```bash
-Command:
-  prstats prs
+Usage: prstats prs [OPTIONS]
 
 Options:
-  --type        Output type             [time, number]                         defaults to number
-  --group-by    Group records           [user, branch]                         default to user
-  --status      Filter by status        [all, open, completed, abandoned]      defaults to completed
-  --branch      Filter by branch        [string]                               --branch main, only shows pull requests going into main branch
-  --before      Filter by date          [string]                               --before 2023-11-04, shows pull requests before and on 11/04/2023
-  --after       Filter by date          [string]                               --after 2023-11-04, shows pull requests after and on 11/04/2023
-  --date-type   Specifys a date type    [closed, created]                      defaults to created
+      --type <OUTPUT_TYPE>     Output type [default: number] [possible values: time, number]
+      --group-by <GROUP_BY>    Group records [default: user] [possible values: user, branch]
+      --status <STATUS>        Filter by status [default: completed] [possible values: all, open, completed, abandoned]
+      --branch <BRANCH>        Filter by target branch [default: ]
+      --before <BEFORE>        Filter by date (shows pull requests before and on) [default: ]
+      --after <AFTER>          Filter by date (shows pull requests after and on) [default: ]
+      --date-type <DATE_TYPE>  Specify a date type [default: created] [possible values: closed, created]
+  -h, --help                   Print help
 ```
 
 #### Examples
@@ -87,6 +87,15 @@ prstats prs --type time --group-by user
 
 Gets the pull request commit stats.
 
+```bash
+Usage: prstats commits [OPTIONS]
+
+Options:
+      --type <OUTPUT_TYPE>   Output type [default: number] [possible values: time, number]
+      --group-by <GROUP_BY>  Group records [default: user] [possible values: user, branch]
+  -h, --help                 Print help
+```
+
 #### Examples
 
 Get average number of commits by user:
@@ -100,7 +109,10 @@ prstats commits --type count --group-by user
 Runs the wizard to setup your version controller.
 
 ```bash
-prstats setup
+Usage: prstats setup
+
+Options:
+  -h, --help  Print help
 ```
 
 ### Fetch `fetch`
@@ -108,7 +120,10 @@ prstats setup
 Gets the latest data from your version controller.
 
 ```bash
-prstats fetch
+Usage: prstats fetch
+
+Options:
+  -h, --help  Print help
 ```
 
 ### Purge `purge`
@@ -116,11 +131,11 @@ prstats fetch
 Cleans up your version controller settings and pull requests data.
 
 ```bash
-Command:
-  prstats purge
+Usage: prstats purge [OPTIONS]
 
 Options:
-  --data-only   Only deletes the data and not version controller settings   [boolean]   defaults to false
+      --data-only  Only deletes the data and not version controller settings
+  -h, --help       Print help
 ```
 
 #### Examples
