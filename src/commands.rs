@@ -10,7 +10,7 @@ pub mod setup;
 
 fn run_prerequisites(run_setup: bool, run_fetch: bool) -> Result<()> {
     let settings = settings::get_settings();
-    if run_setup && settings.azure_dev_ops.is_none() {
+    if run_setup && settings.controller.is_none() {
         setup::run()?;
     }
 

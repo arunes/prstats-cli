@@ -12,6 +12,6 @@ pub fn run(
 ) -> Result<()> {
     super::run_prerequisites(true, true)?;
     println!("running prs");
-    
+
     Ok(())
 }

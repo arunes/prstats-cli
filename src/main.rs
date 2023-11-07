@@ -6,12 +6,13 @@ mod utils;
 use anyhow::Result;
 use args::{App, Command};
 use clap::Parser;
+use colored::Colorize;
 
 fn main() {
     let app = App::parse();
 
     if let Err(error) = run_command(app.command) {
-        println!("Error happened!, {:?}", error);
+        println!("{}", format!("Error happened!, {:?}", error).red());
     }
 }
 

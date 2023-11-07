@@ -3,6 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Error, Debug)]
 pub enum AppError {
+    #[error("Setup incomplete")]
+    SetupIncomplete,
+
     #[error("Unknown error")]
     Unknown,
 }
@@ -10,11 +13,16 @@ pub enum AppError {
 #[derive(Serialize, Deserialize, Default, Debug)]
 #[serde(default)]
 pub struct Settings {
-    pub azure_dev_ops: Option<AzureDevOps>,
+    pub controller: Option<VersionController>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub enum VersionController {
+    AzureDevOps(AzureDevOpsSettings),
 }
 
 #[derive(Serialize, Deserialize, Default, Debug)]
-pub struct AzureDevOps {
+pub struct AzureDevOpsSettings {
     pub organization: String,
     pub project: String,
     pub repository_id: String,

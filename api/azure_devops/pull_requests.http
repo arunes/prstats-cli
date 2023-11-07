@@ -1,0 +1,3 @@
+GET https://dev.azure.com/{{organization}}/{{project}}/_apis/git/repositories/{{repository_id}}/pullrequests?api-version=7.1-preview.1&$top=1
+Accept: application/json
+Authorization: Basic user {{pat}}
