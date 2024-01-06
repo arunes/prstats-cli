@@ -1,3 +1,0 @@
-GET https://dev.azure.com/{{organization}}/{{project}}/_apis/git/repositories/{{repositoryId}}
-Accept: application/json
-Authorization: Basic user {{pat}}
