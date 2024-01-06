@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Utils.fs" />
+    <Compile Include="Models.fs" />
+    <Compile Include="Settings.fs" />
+    <Compile Include="Commands\Fetch.fs" />
+    <Compile Include="Commands\Commits.fs" />
+    <Compile Include="Commands\PullRequests.fs" />
+    <Compile Include="Commands\Purge.fs" />
+    <Compile Include="Commands\Setup.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser.FSharp" Version="2.9.1" />
+    <PackageReference Include="Flurl.Http" Version="4.0.0" />
+    <PackageReference Include="Sharprompt" Version="2.4.5" />
+  </ItemGroup>
+
+</Project>

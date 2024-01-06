@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PRStats": {
+      "commandName": "Project",
+      "commandLineArgs": "setup"
+    }
+  }
+}
