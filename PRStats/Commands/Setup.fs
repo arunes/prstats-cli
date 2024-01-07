@@ -1,13 +1,15 @@
 ﻿namespace Commands
 
+open Models.Common
+open Models.Settings
+open Sharprompt
+open Flurl.Http
+
 module Setup =
 
-    open Sharprompt
-    open Flurl.Http
+    let rec private getGithubSettings () : Option<ControllerSettings> = None
 
-    let rec private getGithubSettings () : Option<Models.Settings> = None
-
-    let rec private getAzureSettings () : Option<Models.Settings> =
+    let rec private getAzureSettings () : Option<ControllerSettings> =
         let validators = [| Validators.Required() |]
 
         let organization =
@@ -54,8 +56,8 @@ module Setup =
 
         if isValid then
             Some(
-                Models.Azure(
-                    { Type = Models.VersionControllerType.AzureDevOps
+                AzureDevOps(
+                    { Type = VersionControllerType.AzureDevOps
                       Organization = organization
                       Project = project
                       RepositoryId = repositoryId
@@ -70,8 +72,8 @@ module Setup =
     let private setup controllerType =
         let settings =
             match controllerType with
-            | Models.VersionControllerType.AzureDevOps -> getAzureSettings ()
-            | Models.VersionControllerType.Github -> getGithubSettings ()
+            | VersionControllerType.AzureDevOps -> getAzureSettings ()
+            | VersionControllerType.Github -> getGithubSettings ()
             | _ -> failwith "Please select valid version controller"
 
         match settings with
@@ -80,7 +82,7 @@ module Setup =
 
     let run isManual =
         let getControllerType () =
-            Prompt.Select<Models.VersionControllerType>("Select your source controller")
+            Prompt.Select<VersionControllerType>("Select your source controller")
 
         if isManual then
             let confirmed =
