@@ -5,13 +5,14 @@ open Models.Common
 open System.Text.Json
 open System.IO
 open Extensions
+open FSharp.SystemCommandLine
 
 module AZ = Models.AzureDevOps
 
 module Fetch =
     open Flurl.Http
 
-    let downloadAzureDevOpsPRs (settings: AZ.Settings) =
+    let private downloadAzureDevOpsPRs (settings: AZ.Settings) =
         let prs =
             settings.apiUrl
                 .AppendPathSegment("pullrequests")
@@ -58,23 +59,32 @@ module Fetch =
               IsDraft = pr.IsDraft
               Reviewers = convertReviewers pr.Reviewers })
 
-    let downloadGithubPRs settings = failwith "not implemented"
+    let private downloadGithubPRs settings = failwith "not implemented"
 
-    let downloadPullRequests (settings: ControllerSettings) =
+    let private downloadPullRequests (settings: ControllerSettings) =
         match settings with
         | AzureDevOps az -> downloadAzureDevOpsPRs az
         | Github gh -> downloadGithubPRs gh
 
-    let run settings =
+    let private run() =
         printfn "Fetching pull requests..."
 
-        let prs = downloadPullRequests settings
+        let settings = Settings.getSettings()
+        let prs = downloadPullRequests settings.Value
 
         (Utils.getFilePath "prs.json", JsonSerializer.Serialize(prs))
         |> File.WriteAllText
 
         Utils.printOk <| "Fetch completed!"
 
-        ()
+    /// <summary>
+    /// Checks if the fetch operation is done
+    /// </summary>
+    let isFetchDone () = 
+        (Utils.getFilePath "prs.json") |> File.Exists
 
-    let isFetchDone = false
+    let cmd =
+        command "fetch" {
+            description "Gets the latest data from your version controller."
+            setHandler run
+        }
