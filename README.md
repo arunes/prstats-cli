@@ -88,19 +88,19 @@ Options:
 Get number of pull requests by user:
 
 ```bash
-prstats prs --type count --group-by user
+prstats run --type count --group-by user
 ```
 
 Get number of open pull requests by branch:
 
 ```bash
-prstats prs --type count --group-by branch --status open
+prstats run --type count --group-by branch --status open
 ```
 
 Get average pull request life by user:
 
 ```bash
-prstats prs --type time --group-by user
+prstats run --type time --group-by user
 ```
 
 ### Setup `setup`
