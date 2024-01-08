@@ -45,22 +45,42 @@ The tool downloads your pull request data and runs commands on the offline data.
 
 > You can see the date and time the your data was downloaded after running any stat command.
 
-### Pull requests `prs`
-
-Gets pull request stats.
-
 ```bash
-Usage: prstats prs [OPTIONS]
+Description:
+  PR Stats CLI - The CLI tool for pull request stats
+
+Usage:
+  PRStats [command] [options]
 
 Options:
-      --type <OUTPUT_TYPE>     Output type [default: number] [possible values: time, number]
-      --group-by <GROUP_BY>    Group records [default: user] [possible values: user, branch]
-      --status <STATUS>        Filter by status [default: completed] [possible values: all, open, completed, abandoned]
-      --branch <BRANCH>        Filter by target branch [default: ]
-      --before <BEFORE>        Filter by date (shows pull requests before and on) [default: ]
-      --after <AFTER>          Filter by date (shows pull requests after and on) [default: ]
-      --date-type <DATE_TYPE>  Specify a date type [default: created] [possible values: closed, created]
-  -h, --help                   Print help
+  --version       Show version information
+  -?, -h, --help  Show help and usage information
+
+Commands:
+  run    Gets pull request stats.
+  setup  Runs the wizard to setup your version controller.
+  fetch  Gets the latest data from your version controller.
+  purge  Cleans up your version controller settings and pull requests data.
+```
+
+### Pull requests `run`
+
+```bash
+Description:
+  Gets pull request stats.
+
+Usage:
+  PRStats run [options]
+
+Options:
+  --status <Abandoned|Active|All|Completed>  Filter by status. [default: Completed]
+  --branch <branch>                          Filter by status. []
+  --before <before>                          Filter by date (shows pull requests before and on. Date format must be in
+                                             YYYY-MM-DD. []
+  --after <after>                            Filter by date (shows pull requests after and on. Date format must be in
+                                             YYYY-MM-DD. []
+  --date-type <Completed|Created>            Specify a date type. [default: Completed]
+  -?, -h, --help                             Show help and usage information
 ```
 
 #### Examples
@@ -83,59 +103,44 @@ Get average pull request life by user:
 prstats prs --type time --group-by user
 ```
 
-### Commits `commits`
-
-Gets the pull request commit stats.
-
-```bash
-Usage: prstats commits [OPTIONS]
-
-Options:
-      --type <OUTPUT_TYPE>   Output type [default: number] [possible values: time, number]
-      --group-by <GROUP_BY>  Group records [default: user] [possible values: user, branch]
-  -h, --help                 Print help
-```
-
-#### Examples
-
-Get average number of commits by user:
-
-```bash
-prstats commits --type count --group-by user
-```
-
 ### Setup `setup`
 
-Runs the wizard to setup your version controller.
-
 ```bash
-Usage: prstats setup
+Description:
+  Runs the wizard to setup your version controller.
+
+Usage:
+  PRStats setup [options]
 
 Options:
-  -h, --help  Print help
+  -?, -h, --help  Show help and usage information
 ```
 
 ### Fetch `fetch`
 
-Gets the latest data from your version controller.
-
 ```bash
-Usage: prstats fetch
+Description:
+  Gets the latest data from your version controller.
+
+Usage:
+  PRStats fetch [options]
 
 Options:
-  -h, --help  Print help
+  -?, -h, --help  Show help and usage information
 ```
 
 ### Purge `purge`
 
-Cleans up your version controller settings and pull requests data.
-
 ```bash
-Usage: prstats purge [OPTIONS]
+Description:
+  Cleans up your version controller settings and pull requests data.
+
+Usage:
+  PRStats purge [options]
 
 Options:
-      --data-only  Only deletes the data and not version controller settings
-  -h, --help       Print help
+  --data-only     Only deletes the data and not version controller settings. [default: False]
+  -?, -h, --help  Show help and usage information
 ```
 
 #### Examples

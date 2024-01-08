@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Compile Include="Extensions.fs" />
-    <Compile Include="Models\CLI.fs" />
     <Compile Include="Models\Common.fs" />
     <Compile Include="Models\AzureDevOps.fs" />
     <Compile Include="Models\Github.fs" />
@@ -15,17 +14,17 @@
     <Compile Include="Models\Settings.fs" />
     <Compile Include="Settings.fs" />
     <Compile Include="Commands\Fetch.fs" />
-    <Compile Include="Commands\Commits.fs" />
-    <Compile Include="Commands\PullRequests.fs" />
     <Compile Include="Commands\Purge.fs" />
+    <Compile Include="Commands\Run.fs" />
     <Compile Include="Commands\Setup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandLineParser.FSharp" Version="2.9.1" />
     <PackageReference Include="Flurl.Http" Version="4.0.0" />
+    <PackageReference Include="FSharp.SystemCommandLine" Version="0.17.0-beta4" />
     <PackageReference Include="Sharprompt" Version="2.4.5" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
 </Project>

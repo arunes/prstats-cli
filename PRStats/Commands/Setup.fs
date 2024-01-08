@@ -4,6 +4,7 @@ open Models.Common
 open Models.Settings
 open Sharprompt
 open Flurl.Http
+open FSharp.SystemCommandLine
 
 module Setup =
 
@@ -80,17 +81,20 @@ module Setup =
         | Some s -> Settings.saveSettings s
         | None -> ()
 
-    let run isManual =
+    let private run() =
         let getControllerType () =
             Prompt.Select<VersionControllerType>("Select your source controller")
 
-        if isManual then
-            let confirmed =
-                Prompt.Confirm
-                    "Setup already completed, running the setup again will overwrite existing settings. Do you want to continue?"
+        let confirmed =
+            Prompt.Confirm
+                "Setup already completed, running the setup again will overwrite existing settings. Do you want to continue?"
 
-            match confirmed with
-            | true -> setup (getControllerType ())
-            | false -> ()
-        else
-            setup (getControllerType ())
+        match confirmed with
+        | true -> setup (getControllerType ())
+        | false -> ()
+
+    let cmd =
+        command "setup" {
+            description "Runs the wizard to setup your version controller."
+            setHandler run
+        }
