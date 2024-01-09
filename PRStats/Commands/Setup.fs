@@ -1,16 +1,15 @@
 ﻿namespace Commands
 
-open Models.Common
-open Models.Settings
+open Models.Data
 open Sharprompt
 open Flurl.Http
 open FSharp.SystemCommandLine
 
 module Setup =
 
-    let rec private getGithubSettings () : Option<ControllerSettings> = None
+    let rec private getGithubSettings () : Option<Settings> = None
 
-    let rec private getAzureSettings () : Option<ControllerSettings> =
+    let rec private getAzureSettings () : Option<Settings> =
         let validators = [| Validators.Required() |]
 
         let organization =
@@ -57,13 +56,11 @@ module Setup =
 
         if isValid then
             Some(
-                AzureDevOps(
-                    { Type = VersionControllerType.AzureDevOps
-                      Organization = organization
-                      Project = project
-                      RepositoryId = repositoryId
-                      PAT = pat }
-                )
+                { Type = VersionControllerType.AzureDevOps
+                  Owner = organization
+                  Project = Some project
+                  Repo = repositoryId
+                  Token = pat }
             )
         else if Prompt.Confirm("Do you want to re-enter the information?") then
             getAzureSettings ()
@@ -78,20 +75,25 @@ module Setup =
             | _ -> failwith "Please select valid version controller"
 
         match settings with
-        | Some s -> Settings.saveSettings s
+        | Some s -> Data.saveSettings s
         | None -> ()
 
-    let private run() =
+    let run () =
         let getControllerType () =
             Prompt.Select<VersionControllerType>("Select your source controller")
 
-        let confirmed =
-            Prompt.Confirm
-                "Setup already completed, running the setup again will overwrite existing settings. Do you want to continue?"
+        let settings = Data.getSettings ()
 
-        match confirmed with
-        | true -> setup (getControllerType ())
-        | false -> ()
+        match settings with
+        | Some _ ->
+            let confirmed =
+                Prompt.Confirm
+                    "Setup already completed, running the setup again will overwrite existing settings. Do you want to continue?"
+
+            match confirmed with
+            | true -> setup (getControllerType ())
+            | false -> ()
+        | None -> setup (getControllerType ())
 
     let cmd =
         command "setup" {

@@ -2,9 +2,10 @@
 open System.CommandLine.Help
 open FSharp.SystemCommandLine
 
-
 [<EntryPoint>]
 let main argv =
+    Dapper.FSharp.SQLite.OptionTypes.register()
+
     let showHelp (ctx: InvocationContext) =
         let hc =
             HelpContext(ctx.HelpBuilder, ctx.Parser.Configuration.RootCommand, System.Console.Out)

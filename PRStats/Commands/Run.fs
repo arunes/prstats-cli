@@ -2,8 +2,7 @@
 
 open System
 open System.IO
-open System.Text.Json
-open Models.Common
+open Sharprompt
 open FSharp.SystemCommandLine
 
 module Run =
@@ -18,37 +17,32 @@ module Run =
         | Completed = 1
         | Created = 2
 
-    let private filterByStatus status prs =
-        match status with
-        | Status.Active -> prs |> Seq.filter (fun pr -> pr.Status = PullRequestStatus.active)
-        | Status.Completed -> prs |> Seq.filter (fun pr -> pr.Status = PullRequestStatus.completed)
-        | Status.Abandoned -> prs |> Seq.filter (fun pr -> pr.Status = PullRequestStatus.abandoned)
-        | _ -> prs
-        |> Seq.toList
+    let private printPretty data =
+        let columnsLengths =
+            { 0 .. (data |> Seq.head |> Seq.length) - 1 }
+            |> Seq.map (fun idx ->
+                data
+                |> Seq.map (fun r -> r |> Seq.item idx)
+                |> Seq.map (fun c -> c |> String.length |> (fun l -> l + 5))
+                |> Seq.max)
 
-    let private filterByBranch branch prs =
-        match branch with
-        | Some b -> prs |> Seq.filter (fun pr -> pr.TargetBranch = b)
-        | None -> prs
-        |> Seq.toList
+        let totalLength = columnsLengths |> Seq.map (fun c -> c) |> Seq.sum
+        let separator = "".PadLeft(totalLength, '-')
 
-    let private filterByBefore date dateType prs =
-        match date with
-        | Some d ->
-            match dateType with
-            | DateType.Completed -> prs |> Seq.filter (fun pr -> pr.ClosedOn <= Some d)
-            | _ -> prs |> Seq.filter (fun pr -> pr.CreatedOn <= d)
-        | None -> prs
-        |> Seq.toList
+        data
+        |> Seq.indexed
+        |> Seq.iter (fun (rix, row) ->
+            row
+            |> Seq.indexed
+            |> Seq.iter (fun (cix, col) ->
+                let length = columnsLengths |> Seq.item cix
+                let value = col.PadRight length
+                printf "%s" value)
 
-    let private filterByAfter date dateType prs =
-        match date with
-        | Some d ->
-            match dateType with
-            | DateType.Completed -> prs |> Seq.filter (fun pr -> pr.ClosedOn >= Some d)
-            | _ -> prs |> Seq.filter (fun pr -> pr.CreatedOn >= d)
-        | None -> prs
-        |> Seq.toList
+
+            match rix with
+            | 0 -> printfn "\n%s" separator
+            | _ -> printfn "")
 
     let private run
         (
@@ -59,22 +53,31 @@ module Run =
             dateType: DateType
         ) =
 
-        let prs =
-            (Utils.getFilePath "prs.json")
-            |> File.ReadAllText
-            |> JsonSerializer.Deserialize<List<PullRequest>>
-            |> filterByStatus status
-            |> filterByBranch branch
-            |> filterByBefore before dateType
-            |> filterByAfter after dateType
+        let reportList =
+            Directory.GetFiles "Reports/"
+            |> Seq.filter (fun f -> f.EndsWith ".sql")
+            |> Seq.map Path.GetFileNameWithoutExtension
 
-        prs
-        |> Seq.groupBy (fun pr -> pr.CreatedBy)
-        |> Seq.map (fun (key, values) ->
-            {| Name = key
-               Count = values |> Seq.length |})
-        |> Seq.sortByDescending (fun r -> r.Count)
-        |> Seq.iter (fun r -> printfn "%s\t\t\t%d" r.Name r.Count)
+        let report = Prompt.Select("Select report to run", reportList)
+        let sql = $"Reports/{report}.sql" |> File.ReadAllText
+
+        let dbStatus =
+            match status with
+            | Status.Active -> Some Models.Data.PullRequestStatus.active
+            | Status.Completed -> Some Models.Data.PullRequestStatus.completed
+            | Status.Abandoned -> Some Models.Data.PullRequestStatus.abandoned
+            | _ -> None
+
+        let dateTypeColumn =
+            match dateType with
+            | DateType.Completed -> "ClosedOn"
+            | _ -> "CreatedOn"
+
+        printfn "Running '%s' report." report
+        Data.getPullRequests (dbStatus, branch, before, after, dateTypeColumn, sql)
+        |> Async.RunSynchronously
+        |> Seq.toList
+        |> printPretty
 
     let cmd =
         let status = Input.Option<Status>("--status", Status.Completed, "Filter by status.")

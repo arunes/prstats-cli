@@ -3,16 +3,26 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <PublishSingleFile>true</PublishSingleFile>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PlatformTarget>x64</PlatformTarget>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Extensions.fs" />
-    <Compile Include="Models\Common.fs" />
-    <Compile Include="Models\AzureDevOps.fs" />
-    <Compile Include="Models\Github.fs" />
+    <Content
+      Include="..\reports\**"
+      CopyToOutputDirectory="PreserveNewest"
+      CopyToPublishDirectory="PreserveNewest"
+      Link="Reports\%(RecursiveDir)\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Models.fs" />
     <Compile Include="Utils.fs" />
-    <Compile Include="Models\Settings.fs" />
-    <Compile Include="Settings.fs" />
+    <Compile Include="Extensions.fs" />
+    <Compile Include="Data.fs" />
     <Compile Include="Commands\Fetch.fs" />
     <Compile Include="Commands\Purge.fs" />
     <Compile Include="Commands\Run.fs" />
@@ -21,10 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="Dapper.FSharp" Version="4.7.0" />
     <PackageReference Include="Flurl.Http" Version="4.0.0" />
     <PackageReference Include="FSharp.SystemCommandLine" Version="0.17.0-beta4" />
     <PackageReference Include="Sharprompt" Version="2.4.5" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>
-
 </Project>
