@@ -115,7 +115,7 @@ module Run =
             )
 
         command "run" {
-            description "Gets pull request stats."
+            description "Runs pull request reports."
             inputs (status, branch, before, after, dateType, reportId)
             setHandler run
         }
