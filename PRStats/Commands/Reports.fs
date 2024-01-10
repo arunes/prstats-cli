@@ -9,14 +9,16 @@ module Reports =
     /// Gets a list of reports from the Reports folder
     /// </summary>
     /// <returns>A list of report records with Id and Name fields</returns>
-    let reportList = 
-        Directory.GetFiles "Reports/"
+    let reportList =
+        (Utils.appFolder, "reports")
+        |> Path.Combine
+        |> Directory.GetFiles
         |> Seq.filter (fun f -> f.EndsWith ".sql")
         |> Seq.map Path.GetFileNameWithoutExtension
         |> Seq.sort
         |> Seq.indexed
         |> Seq.map (fun (idx, f) -> { Id = idx + 1; Name = f })
-        |> Seq.toList      
+        |> Seq.toList
 
     /// <summary>
     /// Gets a report by report id
@@ -37,7 +39,10 @@ module Reports =
         let report = reportList |> Seq.tryFind (fun r -> r.Id = id)
 
         match report with
-        | Some r -> $"Reports/{r.Name}.sql" |> File.ReadAllText
+        | Some r ->
+            (Utils.appFolder, "reports", $"{r.Name}.sql")
+            |> Path.Combine
+            |> File.ReadAllText
         | None -> failwith $"Cannot find the report with id '{id}'"
 
     let private run () =

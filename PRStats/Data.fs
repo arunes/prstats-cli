@@ -41,12 +41,15 @@ let private createTables (conn: SQLiteConnection) =
              Project TEXT NULL,
              Repo TEXT NOT NULL,
              Token TEXT NOT NULL
-        );"
+        );
+        
+        CREATE VIEW IF NOT EXISTS DataSource AS 
+            SELECT * FROM PullRequest;"
 
     conn.Execute sql |> ignore
 
 let private getConnection () =
-    let dbFile = Utils.getFilePath "data.sqlite"
+    let dbFile = (Utils.dataFolder, "data.sqlite") |> Path.Combine
 
     let dbExists =
         match dbFile |> File.Exists with
@@ -55,7 +58,7 @@ let private getConnection () =
             SQLiteConnection.CreateFile dbFile
             false
 
-    let dbConnectionStr = $"Data Source={dbFile};Version=3;"
+    let dbConnectionStr = $"Data Source='{dbFile}';Version=3;"
     let conn = new SQLiteConnection(dbConnectionStr)
     conn.Open()
 
@@ -116,14 +119,17 @@ let createPullRequests prs =
     |> Async.RunSynchronously
     |> ignore
 
-    insert {
-        into pullRequestTable
-        values prs
-    }
-    |> db.InsertAsync
-    |> Async.AwaitTask
-    |> Async.RunSynchronously
-    |> ignore
+    prs
+    |> List.chunkBySize 500
+    |> List.iter (fun set ->
+        insert {
+            into pullRequestTable
+            values set
+        }
+        |> db.InsertAsync
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
+        |> ignore)
 
 let createPullRequestReviewers reviewers =
     use db = getConnection ()
@@ -137,14 +143,15 @@ let createPullRequestReviewers reviewers =
     |> Async.RunSynchronously
     |> ignore
 
-    insert {
-        into pullRequestReviewerTable
-        values reviewers
-    }
-    |> db.InsertAsync
-    |> Async.AwaitTask
-    |> Async.RunSynchronously
-    |> ignore
+    reviewers |> List.chunkBySize 500 |> List.iter (fun set -> 
+        insert {
+            into pullRequestReviewerTable
+            values set
+        }
+        |> db.InsertAsync
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
+        |> ignore)
 
 let getPullRequests
     (

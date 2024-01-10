@@ -2,22 +2,23 @@
 
 open System.IO
 open System
-open System.Reflection
 open System.Diagnostics
 
-let getFilePath fileName =
-    let appDataRoot =
+let appFolder = AppContext.BaseDirectory
+
+let dataFolder =
+    let dataRoot =
         (Environment.GetFolderPath Environment.SpecialFolder.ApplicationData, "prstats-cli")
         |> Path.Combine
 
-    if not <| Directory.Exists appDataRoot then
-        Directory.CreateDirectory appDataRoot |> ignore
+    if not <| Directory.Exists dataRoot then
+        Directory.CreateDirectory dataRoot |> ignore
 
-    Path.Combine(appDataRoot, fileName)
+    dataRoot
 
 let printCommandHeader command =
     let version =
-        FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location)
+        (appFolder, "prstats.exe") |> Path.Combine |> FileVersionInfo.GetVersionInfo
 
     printfn ""
     printfn "prstats-cli v%d.%d - running '%s' command." version.ProductMajorPart version.ProductMinorPart command

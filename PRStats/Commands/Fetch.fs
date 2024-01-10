@@ -1,7 +1,6 @@
 ﻿namespace Commands
 
 open Models.Data
-open System.IO
 open Extensions
 open FSharp.SystemCommandLine
 
@@ -11,14 +10,26 @@ module Fetch =
     open Flurl.Http
 
     let private downloadAzureDevOpsPRs (settings: Settings) =
-        let response =
-            settings.azureApiUrl
-                .AppendPathSegment("pullrequests")
-                .AppendQueryParam("$top", "500")
-                .AppendQueryParam("searchCriteria.status", "all")
-                .GetJson<AZ.ApiResponse<AZ.PullRequest>>()
+        let downloadLimit = 500
 
-        // if pr.count > limit pull next
+        let rec downloadPRs (skip: int) =
+            let response =
+                settings.azureApiUrl
+                    .AppendPathSegment("pullrequests")
+                    .AppendQueryParam("$top", downloadLimit)
+                    .AppendQueryParam("$skip", skip)
+                    .AppendQueryParam("searchCriteria.status", "all")
+                    .GetJson<AZ.ApiResponse<AZ.PullRequest>>()
+
+            seq {
+                yield! response.Value
+
+                if response.Count = downloadLimit then
+                    printfn "Fetching next %d pull requests..." downloadLimit
+                    yield! downloadPRs (skip + downloadLimit)
+            }
+
+        let apiResponse = downloadPRs 0 |> Seq.toList
 
         let convertReviewers (pullRequestId: string, reviewers: Option<List<AZ.Reviewer>>) =
             match reviewers with
@@ -40,7 +51,7 @@ module Fetch =
                     result)
 
         let prs =
-            response.Value
+            apiResponse
             |> List.map (fun pr ->
                 { Id = pr.PullRequestId.ToString()
                   Title = pr.Title
@@ -58,10 +69,11 @@ module Fetch =
                   IsDraft = pr.IsDraft })
 
         let reviewers =
-            response.Value
+            apiResponse
             |> List.map (fun pr -> convertReviewers (pr.PullRequestId.ToString(), pr.Reviewers))
             |> List.collect (fun rw -> rw)
 
+        Utils.printOk <| $"Fetched {prs.Length} pull requests and {reviewers.Length} reviewers records."
         prs, reviewers
 
     let private downloadGithubPRs settings = failwith "not implemented"
@@ -73,13 +85,14 @@ module Fetch =
         | _ -> failwith "Cannot determine the settings type."
 
     let private run () =
-        Utils.printCommandHeader "purge"
+        Utils.printCommandHeader "fetch"
 
         printfn "Fetching pull requests..."
 
         let settings = Data.getSettings ()
         let prs, reviewers = downloadPullRequests settings.Value
 
+        printfn "Saving pull requests to database..."
         Data.createPullRequests prs
         Data.createPullRequestReviewers reviewers
 
@@ -90,8 +103,7 @@ module Fetch =
     /// <summary>
     /// Checks if the fetch operation is done
     /// </summary>
-    let isFetchDone () =
-        (Utils.getFilePath "prs.json") |> File.Exists
+    let isFetchDone () = true
 
     let cmd =
         command "fetch" {
