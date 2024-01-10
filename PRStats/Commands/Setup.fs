@@ -78,7 +78,9 @@ module Setup =
         | Some s -> Data.saveSettings s
         | None -> ()
 
-    let run () =
+    let private run () =
+        Utils.printCommandHeader "setup"
+
         let getControllerType () =
             Prompt.Select<VersionControllerType>("Select your source controller")
 
@@ -94,6 +96,8 @@ module Setup =
             | true -> setup (getControllerType ())
             | false -> ()
         | None -> setup (getControllerType ())
+
+        Utils.printCommandFooter "setup"
 
     let cmd =
         command "setup" {

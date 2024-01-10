@@ -32,9 +32,9 @@ module Fetch =
                           Name = rv.DisplayName
                           Vote =
                             match rv.Vote with
-                            | AZ.PullRequestVote.approved
-                            | AZ.PullRequestVote.approvedWithSuggestions -> PullRequestVote.approved
-                            | AZ.PullRequestVote.rejected -> PullRequestVote.rejected
+                            | AZ.PullRequestVote.Approved
+                            | AZ.PullRequestVote.ApprovedWithSuggestions -> PullRequestVote.approved
+                            | AZ.PullRequestVote.Rejected -> PullRequestVote.rejected
                             | _ -> PullRequestVote.noVote }
 
                     result)
@@ -46,9 +46,9 @@ module Fetch =
                   Title = pr.Title
                   Status =
                     match pr.Status with
-                    | AZ.PullRequestStatus.abandoned -> PullRequestStatus.abandoned
-                    | AZ.PullRequestStatus.active -> PullRequestStatus.active
-                    | AZ.PullRequestStatus.completed -> PullRequestStatus.completed
+                    | AZ.PullRequestStatus.Abandoned -> PullRequestStatus.abandoned
+                    | AZ.PullRequestStatus.Active -> PullRequestStatus.active
+                    | AZ.PullRequestStatus.Completed -> PullRequestStatus.completed
                     | _ -> PullRequestStatus.other
                   CreatedBy = pr.CreatedBy.DisplayName
                   CreatedOn = pr.CreationDate
@@ -73,6 +73,8 @@ module Fetch =
         | _ -> failwith "Cannot determine the settings type."
 
     let private run () =
+        Utils.printCommandHeader "purge"
+
         printfn "Fetching pull requests..."
 
         let settings = Data.getSettings ()
@@ -82,6 +84,8 @@ module Fetch =
         Data.createPullRequestReviewers reviewers
 
         Utils.printOk <| "Fetch completed!"
+
+        Utils.printCommandFooter "fetch"
 
     /// <summary>
     /// Checks if the fetch operation is done

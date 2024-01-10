@@ -4,20 +4,23 @@ open System
 open Flurl.Http
 open System.ComponentModel.DataAnnotations
 
+module Common =
+    type Report = { Id: int; Name: string }
+
 module AzureDevOps =
     type PullRequestStatus =
-        | abandoned = 1
-        | active = 2
-        | all = 3
-        | completed = 4
-        | notSet = 5
+        | Abandoned = 1
+        | Active = 2
+        | All = 3
+        | Completed = 4
+        | NotSet = 5
 
     type PullRequestVote =
-        | approved = 10
-        | approvedWithSuggestions = 5
-        | noVote = 0
-        | waitingForAuthor = -5
-        | rejected = -10
+        | Approved = 10
+        | ApprovedWithSuggestions = 5
+        | NoVote = 0
+        | WaitingForAuthor = -5
+        | Rejected = -10
 
     type User =
         { Id: Guid

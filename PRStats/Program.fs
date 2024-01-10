@@ -18,8 +18,9 @@ let main argv =
         description "PR Stats CLI - The CLI tool for pull request stats"
         inputs ctx
         setHandler showHelp
-        addCommand Commands.Run.cmd
-        addCommand Commands.Setup.cmd
         addCommand Commands.Fetch.cmd
         addCommand Commands.Purge.cmd
+        addCommand Commands.Reports.cmd
+        addCommand Commands.Run.cmd
+        addCommand Commands.Setup.cmd
     }

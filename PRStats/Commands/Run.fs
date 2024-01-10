@@ -1,7 +1,6 @@
 ﻿namespace Commands
 
 open System
-open System.IO
 open Sharprompt
 open FSharp.SystemCommandLine
 
@@ -17,7 +16,7 @@ module Run =
         | Completed = 1
         | Created = 2
 
-    let private printPretty data =
+    let private prettyPrint data =
         let columnsLengths =
             { 0 .. (data |> Seq.head |> Seq.length) - 1 }
             |> Seq.map (fun idx ->
@@ -28,6 +27,8 @@ module Run =
 
         let totalLength = columnsLengths |> Seq.map (fun c -> c) |> Seq.sum
         let separator = "".PadLeft(totalLength, '-')
+
+        printfn ""
 
         data
         |> Seq.indexed
@@ -50,16 +51,22 @@ module Run =
             branch: Option<string>,
             before: Option<DateTime>,
             after: Option<DateTime>,
-            dateType: DateType
+            dateType: DateType,
+            reportId: Option<int>
         ) =
+        Utils.printCommandHeader "run"
 
-        let reportList =
-            Directory.GetFiles "Reports/"
-            |> Seq.filter (fun f -> f.EndsWith ".sql")
-            |> Seq.map Path.GetFileNameWithoutExtension
+        let report =
+            match reportId with
+            | Some id -> Reports.getReportById id
+            | None ->
+                Prompt.Select(
+                    "Select report to run",
+                    Reports.reportList,
+                    textSelector = (fun r -> $"{r.Id, 2}) {r.Name}")
+                )
 
-        let report = Prompt.Select("Select report to run", reportList)
-        let sql = $"Reports/{report}.sql" |> File.ReadAllText
+        let sql = Reports.getReportSql report.Id
 
         let dbStatus =
             match status with
@@ -73,11 +80,14 @@ module Run =
             | DateType.Completed -> "ClosedOn"
             | _ -> "CreatedOn"
 
-        printfn "Running '%s' report." report
+        printfn "Running '%s' report." report.Name
+
         Data.getPullRequests (dbStatus, branch, before, after, dateTypeColumn, sql)
         |> Async.RunSynchronously
         |> Seq.toList
-        |> printPretty
+        |> prettyPrint
+
+        Utils.printCommandFooter "run"
 
     let cmd =
         let status = Input.Option<Status>("--status", Status.Completed, "Filter by status.")
@@ -98,8 +108,14 @@ module Run =
         let dateType =
             Input.Option<DateType>("--date-type", DateType.Completed, "Specify a date type.")
 
+        let reportId =
+            Input.OptionMaybe<int>(
+                "--report-id",
+                "Specify a report id. You can get list of reports by running `reports` command."
+            )
+
         command "run" {
             description "Gets pull request stats."
-            inputs (status, branch, before, after, dateType)
+            inputs (status, branch, before, after, dateType, reportId)
             setHandler run
         }

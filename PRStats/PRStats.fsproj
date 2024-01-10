@@ -8,14 +8,13 @@
     <PlatformTarget>x64</PlatformTarget>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <SelfContained>false</SelfContained>
+    <AssemblyName>prstats</AssemblyName>
+    <Version>0.1</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content
-      Include="..\reports\**"
-      CopyToOutputDirectory="PreserveNewest"
-      CopyToPublishDirectory="PreserveNewest"
-      Link="Reports\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="..\reports\**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Link="Reports\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +24,7 @@
     <Compile Include="Data.fs" />
     <Compile Include="Commands\Fetch.fs" />
     <Compile Include="Commands\Purge.fs" />
+    <Compile Include="Commands\Reports.fs" />
     <Compile Include="Commands\Run.fs" />
     <Compile Include="Commands\Setup.fs" />
     <Compile Include="Program.fs" />
