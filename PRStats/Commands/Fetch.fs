@@ -3,12 +3,11 @@
 open Models.Data
 open Extensions
 open FSharp.SystemCommandLine
+open Flurl.Http
 
 module AZ = Models.AzureDevOps
 
 module Fetch =
-    open Flurl.Http
-
     let private downloadAzureDevOpsPRs (settings: Settings) =
         let downloadLimit = 500
 
@@ -25,7 +24,6 @@ module Fetch =
                 yield! response.Value
 
                 if response.Count = downloadLimit then
-                    printfn "Fetching next %d pull requests..." downloadLimit
                     yield! downloadPRs (skip + downloadLimit)
             }
 
@@ -73,7 +71,9 @@ module Fetch =
             |> List.map (fun pr -> convertReviewers (pr.PullRequestId.ToString(), pr.Reviewers))
             |> List.collect (fun rw -> rw)
 
-        Utils.printOk <| $"Fetched {prs.Length} pull requests and {reviewers.Length} reviewers records."
+        Utils.printOk
+        <| $"Fetched {prs.Length} pull requests and {reviewers.Length} reviewers records."
+
         prs, reviewers
 
     let private downloadGithubPRs settings = failwith "not implemented"
@@ -99,11 +99,6 @@ module Fetch =
         Utils.printOk <| "Fetch completed!"
 
         Utils.printCommandFooter "fetch"
-
-    /// <summary>
-    /// Checks if the fetch operation is done
-    /// </summary>
-    let isFetchDone () = true
 
     let cmd =
         command "fetch" {

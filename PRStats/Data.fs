@@ -67,6 +67,10 @@ let private getConnection () =
 
     conn
 
+/// <summary>
+/// Gets the settings from the database
+/// </summary>
+/// <returns>An option value containing the settings if found, or None otherwise</returns>
 let getSettings () : Option<Settings> =
     use db = getConnection ()
 
@@ -84,6 +88,10 @@ let getSettings () : Option<Settings> =
     | [ s ] -> Some s
     | _ -> None
 
+/// <summary>
+/// Saves the settings to the database
+/// </summary>
+/// <param name="settings">The settings to save</param>
 let saveSettings (settings: Settings) =
     use db = getConnection ()
 
@@ -107,6 +115,10 @@ let saveSettings (settings: Settings) =
 
     ()
 
+/// <summary>
+/// Creates the pull requests in the database
+/// </summary>
+/// <param name="prs">The list of pull requests to create</param>
 let createPullRequests prs =
     use db = getConnection ()
 
@@ -131,6 +143,10 @@ let createPullRequests prs =
         |> Async.RunSynchronously
         |> ignore)
 
+/// <summary>
+/// Creates the pull request reviewers in the database
+/// </summary>
+/// <param name="reviewers">The list of pull request reviewers to create</param>
 let createPullRequestReviewers reviewers =
     use db = getConnection ()
 
@@ -153,6 +169,14 @@ let createPullRequestReviewers reviewers =
         |> Async.RunSynchronously
         |> ignore)
 
+/// <summary>
+/// Gets the pull requests from the database
+/// </summary>
+/// <param name="status">An optional filter for the pull request status</param>
+/// <param name="branch">An optional filter for the pull request branch</param>
+/// <param name="before">An optional filter for the pull request creation date before a given date</param>
+/// <param name="after">An optional filter for the pull request creation date after a given date</param>
+/// <returns>A list of pull requests that match the filters</returns>
 let getPullRequests
     (
         status: Option<PullRequestStatus>,
