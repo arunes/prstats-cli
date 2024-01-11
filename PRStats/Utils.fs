@@ -23,6 +23,30 @@ let dataFolder =
     dataRoot
 
 /// <summary>
+/// Checks the prerequisites for a given command
+/// </summary>
+/// <param name="command">The command to check</param>
+/// <param name="hasSettings">A flag indicating whether the settings are available</param>
+/// <param name="hasFetch">A flag indicating whether the fetch operation is done</param>
+/// <returns>An option value containing an array of required commands that are missing, or None if all prerequisites are met</returns>
+let checkPrequisites command hasSettings hasFetch =
+    let check requiredCommand current =
+        if requiredCommand = "setup" && not <| hasSettings then
+            current |> Array.append [| "setup" |]
+        elif requiredCommand = "fetch" && not <| hasFetch then
+            current |> Array.append [| "fetch" |]
+        else
+            current
+
+    match command with
+    | "fetch" -> Array.empty |> check "setup"
+    | "purge" -> Array.empty |> check "setup" |> check "fetch"
+    | "run" -> Array.empty |> check "setup" |> check "fetch"
+    | _ -> Array.empty
+    |> Array.rev
+    |> fun arr -> if arr.Length = 0 then None else Some arr
+
+/// <summary>
 /// Prints the command header with the version and command name
 /// </summary>
 /// <param name="command">The command name</param>
@@ -30,7 +54,6 @@ let printCommandHeader command =
     let version =
         (appFolder, "prstats.exe") |> Path.Combine |> FileVersionInfo.GetVersionInfo
 
-    printfn ""
     printfn "prstats-cli v%d.%d - running '%s' command." version.ProductMajorPart version.ProductMinorPart command
     printfn ""
 

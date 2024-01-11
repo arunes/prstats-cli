@@ -46,8 +46,6 @@ module Reports =
         | None -> failwith $"Cannot find the report with id '{id}'"
 
     let private run () =
-        Utils.printCommandHeader "reports"
-
         let reports = reportList
 
         let seperator =
@@ -59,8 +57,6 @@ module Reports =
         printfn "Id   Name"
         printfn "%s" seperator
         reports |> Seq.iter (fun r -> printfn "%-5d%s" r.Id r.Name)
-
-        Utils.printCommandFooter "reports"
 
     let cmd =
         command "reports" {

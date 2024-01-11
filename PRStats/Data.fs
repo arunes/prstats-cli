@@ -159,7 +159,9 @@ let createPullRequestReviewers reviewers =
     |> Async.RunSynchronously
     |> ignore
 
-    reviewers |> List.chunkBySize 500 |> List.iter (fun set -> 
+    reviewers
+    |> List.chunkBySize 500
+    |> List.iter (fun set ->
         insert {
             into pullRequestReviewerTable
             values set
@@ -168,6 +170,17 @@ let createPullRequestReviewers reviewers =
         |> Async.AwaitTask
         |> Async.RunSynchronously
         |> ignore)
+
+/// <summary>
+/// Gets the number of pull requests in the database
+/// </summary>
+/// <returns>An integer representing the count of pull requests</returns>
+let getPullRequestCount () =
+    use db = getConnection ()
+
+    db.ExecuteScalarAsync<int> "SELECT count(Id) FROM PullRequest"
+    |> Async.AwaitTask
+    |> Async.RunSynchronously
 
 /// <summary>
 /// Gets the pull requests from the database

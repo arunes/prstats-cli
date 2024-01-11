@@ -50,7 +50,6 @@ module AzureDevOps =
 module Data =
     type VersionControllerType =
         | [<Display(Name = "Azure DevOps")>] AzureDevOps = 1
-        | [<Display(Name = "Github")>] Github = 2
 
     type PullRequestStatus =
         | active = 1

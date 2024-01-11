@@ -71,22 +71,14 @@ module Fetch =
             |> List.map (fun pr -> convertReviewers (pr.PullRequestId.ToString(), pr.Reviewers))
             |> List.collect (fun rw -> rw)
 
-        Utils.printOk
-        <| $"Fetched {prs.Length} pull requests and {reviewers.Length} reviewers records."
-
         prs, reviewers
-
-    let private downloadGithubPRs settings = failwith "not implemented"
 
     let private downloadPullRequests (settings: Settings) =
         match settings.Type with
         | VersionControllerType.AzureDevOps -> downloadAzureDevOpsPRs settings
-        | VersionControllerType.Github -> downloadGithubPRs settings
         | _ -> failwith "Cannot determine the settings type."
 
     let private run () =
-        Utils.printCommandHeader "fetch"
-
         printfn "Fetching pull requests..."
 
         let settings = Data.getSettings ()
@@ -96,9 +88,8 @@ module Fetch =
         Data.createPullRequests prs
         Data.createPullRequestReviewers reviewers
 
-        Utils.printOk <| "Fetch completed!"
-
-        Utils.printCommandFooter "fetch"
+        Utils.printOk
+        <| $"Fetch completed! Fetched {prs.Length} pull requests and {reviewers.Length} reviewers records."
 
     let cmd =
         command "fetch" {

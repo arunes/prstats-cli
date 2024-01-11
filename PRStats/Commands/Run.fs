@@ -54,8 +54,6 @@ module Run =
             dateType: DateType,
             reportId: Option<int>
         ) =
-        Utils.printCommandHeader "run"
-
         let report =
             match reportId with
             | Some id -> Reports.getReportById id
@@ -86,8 +84,6 @@ module Run =
         |> Async.RunSynchronously
         |> Seq.toList
         |> prettyPrint
-
-        Utils.printCommandFooter "run"
 
     let cmd =
         let status = Input.Option<Status>("--status", Status.Completed, "Filter by status.")

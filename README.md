@@ -6,8 +6,13 @@ _The PR Stats CLI is a command-line interface tool that you use to get stats abo
 
 ### Supported version control platforms
 
-- [x] Azure DevOps Git
-- [ ] GitHub
+- Azure DevOps Git
+
+### Roadmap
+- Support GitHub
+- Ability to use multiple accounts
+- Ability to use multiple repos
+
 
 ## Getting started
 

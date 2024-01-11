@@ -7,8 +7,6 @@ open FSharp.SystemCommandLine
 
 module Setup =
 
-    let rec private getGithubSettings () : Option<Settings> = None
-
     let rec private getAzureSettings () : Option<Settings> =
         let validators = [| Validators.Required() |]
 
@@ -71,7 +69,6 @@ module Setup =
         let settings =
             match controllerType with
             | VersionControllerType.AzureDevOps -> getAzureSettings ()
-            | VersionControllerType.Github -> getGithubSettings ()
             | _ -> failwith "Please select valid version controller"
 
         match settings with
@@ -79,11 +76,6 @@ module Setup =
         | None -> ()
 
     let private run () =
-        Utils.printCommandHeader "setup"
-
-        let getControllerType () =
-            Prompt.Select<VersionControllerType>("Select your source controller")
-
         let settings = Data.getSettings ()
 
         match settings with
@@ -93,11 +85,9 @@ module Setup =
                     "Setup already completed, running the setup again will overwrite existing settings. Do you want to continue?"
 
             match confirmed with
-            | true -> setup (getControllerType ())
+            | true -> setup VersionControllerType.AzureDevOps
             | false -> ()
-        | None -> setup (getControllerType ())
-
-        Utils.printCommandFooter "setup"
+        | None -> setup VersionControllerType.AzureDevOps
 
     let cmd =
         command "setup" {
