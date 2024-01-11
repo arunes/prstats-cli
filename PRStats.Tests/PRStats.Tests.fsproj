@@ -26,4 +26,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PRStats\PRStats.fsproj" />
+  </ItemGroup>
+
 </Project>

@@ -2,7 +2,17 @@ module Tests
 
 open System
 open Xunit
+open System.IO
+
 
 [<Fact>]
-let ``My test`` () =
-    Assert.True(true)
+let ``printCommandHeader should print the version and command name`` () =
+    use sw = new StringWriter()
+    Console.SetOut sw
+    
+    let command = "test"
+    let expected = sprintf "\r\nprstats-cli v0.1 - running '%s' command.\r\n\r\n" command
+    Utils.printCommandHeader command
+    let actual = sw.ToString()
+    Assert.Equal(expected, actual)
+
