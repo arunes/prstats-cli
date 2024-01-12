@@ -1,6 +1,6 @@
 # PR Stats CLI - The CLI tool for pull request stats
 
-![PR Stats CLI logo](https://github.com/arunes/prstats-cli/raw/main/terminal.png)
+![PR Stats CLI logo](https://raw.githubusercontent.com/arunes/prstats-cli/main/terminal.png)
 
 _The PR Stats CLI is a command-line interface tool that you use to get stats about pull requests directly from a command shell._
 
