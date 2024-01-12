@@ -1,0 +1,40 @@
+<Project Sdk="WixToolset.Sdk/4.0.3">
+  <PropertyGroup>
+    <OutputName>prstats-cli-$(RuntimeIdentifier)</OutputName>
+  </PropertyGroup>
+  <Target Name="CustomBeforeBuild" BeforeTargets="BeforeBuild">
+    <Exec Command="dotnet publish $(ProjectDir)..\PRStats\PRStats.fsproj --configuration Release --self-contained --runtime $(RuntimeIdentifier) --output $(OutDir)publish" />
+    <GetAssemblyIdentity AssemblyFiles="$(OutDir)publish\prstats.dll">
+      <Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
+    </GetAssemblyIdentity>
+    <PropertyGroup>
+      <DefineConstants>BuildVersion=%(AssemblyVersion.Version)</DefineConstants>
+    </PropertyGroup>
+  </Target>
+  <Target Name="CustomAfterBuild" BeforeTargets="AfterBuild">
+    <Delete Files="$(ProjectDir)prstats-cli-$(RuntimeIdentifier)-v%(AssemblyVersion.Version).msi" />
+    <Move 
+        SourceFiles="$(OutDir)prstats-cli-$(RuntimeIdentifier).msi"
+        DestinationFiles="$(ProjectDir)prstats-cli-$(RuntimeIdentifier)-v%(AssemblyVersion.Version).msi" />
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
+    <RemoveDir Directories="$(BaseOutputPath)" />
+  </Target>
+
+  <ItemGroup>
+    <HarvestDirectory Include="$(OutDir)publish">
+      <ComponentGroupName>AppFiles</ComponentGroupName>
+      <DirectoryRefId>INSTALLFOLDER</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+      <SuppressRegistry>true</SuppressRegistry>
+    </HarvestDirectory>
+    <BindPath Include="$(OutDir)publish" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Heat" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PRStats\PRStats.fsproj" />
+  </ItemGroup>
+</Project>

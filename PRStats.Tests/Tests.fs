@@ -11,7 +11,7 @@ let ``printCommandHeader should print the version and command name`` () =
     Console.SetOut sw
     
     let command = "test"
-    let expected = sprintf "\r\nprstats-cli v0.1 - running '%s' command.\r\n\r\n" command
+    let expected = sprintf "prstats-cli v0.1 - running '%s' command.\r\n\r\n" command
     Utils.printCommandHeader command
     let actual = sw.ToString()
     Assert.Equal(expected, actual)

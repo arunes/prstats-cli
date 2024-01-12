@@ -4,7 +4,7 @@ open FSharp.SystemCommandLine
 
 module Purge =
     let private run (dataOnly: bool) = 
-        printfn "purging"
+        Utils.printError <| "Not implemented"
 
     let cmd =
         let dataOnly =
