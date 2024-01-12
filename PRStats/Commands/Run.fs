@@ -110,8 +110,22 @@ module Run =
                 "Specify a report id. You can get list of reports by running `reports` command."
             )
 
+        let handler
+            (
+                status: Status,
+                branch: Option<string>,
+                before: Option<DateTime>,
+                after: Option<DateTime>,
+                dateType: DateType,
+                reportId: Option<int>
+            ) =
+            try
+                run (status, branch, before, after, dateType, reportId)
+            with ex ->
+                Utils.printError <| ex.Message
+
         command "run" {
             description "Runs pull request reports."
             inputs (status, branch, before, after, dateType, reportId)
-            setHandler run
+            setHandler handler
         }

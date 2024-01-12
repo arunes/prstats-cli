@@ -29,7 +29,7 @@ module Reports =
 
         match report with
         | Some r -> r
-        | None -> failwith $"Cannot find the report with id '{id}'"
+        | None -> failwith $"Cannot find the report with id '{id}'."
 
     /// <summary>
     /// Gets a report's sql by report id
@@ -43,7 +43,7 @@ module Reports =
             (Utils.appFolder, "reports", $"{r.Name}.sql")
             |> Path.Combine
             |> File.ReadAllText
-        | None -> failwith $"Cannot find the report with id '{id}'"
+        | None -> failwith $"Cannot find the report with id '{id}'."
 
     let private run () =
         let reports = reportList
@@ -59,7 +59,13 @@ module Reports =
         reports |> Seq.iter (fun r -> printfn "%-5d%s" r.Id r.Name)
 
     let cmd =
+        let handler () =
+            try
+                run ()
+            with ex ->
+                Utils.printError <| ex.Message
+
         command "reports" {
             description "Lists all the available reports."
-            setHandler run
+            setHandler handler
         }

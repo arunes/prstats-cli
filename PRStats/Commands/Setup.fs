@@ -60,10 +60,14 @@ module Setup =
                   Repo = repositoryId
                   Token = pat }
             )
-        else if Prompt.Confirm("Do you want to re-enter the information?") then
-            getAzureSettings ()
         else
-            None
+            Utils.printError
+            <| "Validation failed, please check the information you entered."
+
+            if Prompt.Confirm("Do you want to re-enter the information?") then
+                getAzureSettings ()
+            else
+                None
 
     let private setup controllerType =
         let settings =
@@ -90,7 +94,13 @@ module Setup =
         | None -> setup VersionControllerType.AzureDevOps
 
     let cmd =
+        let handler () =
+            try
+                run ()
+            with ex ->
+                Utils.printError <| ex.Message
+
         command "setup" {
             description "Runs the wizard to setup your version controller."
-            setHandler run
+            setHandler handler
         }

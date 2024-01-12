@@ -1,6 +1,6 @@
 # PR Stats CLI - The CLI tool for pull request stats
 
-![PR Stats CLI logo](terminal.png)
+![PR Stats CLI logo](https://github.com/arunes/prstats-cli/raw/main/terminal.png)
 
 _The PR Stats CLI is a command-line interface tool that you use to get stats about pull requests directly from a command shell._
 
@@ -16,23 +16,33 @@ _The PR Stats CLI is a command-line interface tool that you use to get stats abo
 
 ## Getting started
 
-You can download pre compiled cli tool from [Releases](https://github.com/arunes/prstats-cli/releases), or you can build it from source.
+You can install the PR Stats CLI tool from Chocolatey, as a dotnet tool or you can install manually by downloading pre complied version from [Releases](https://github.com/arunes/prstats-cli/releases) page.
 
+### Installing with Chocolatey
+To install PR Stats CLI using [Chocolatey](https://chocolatey.org/), run the following command from your command line / PowerShell:
+```powershell
+choco install prstats-cli
+```
 
-### Publishing from source
+To upgrade PR Stats CLI, run:
+```powershell
+choco upgrade prstats-cli
+```
 
-You will need [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to build the tool from the source.
-
-Clone the repository:
-
+To verify PR Stats CLI was successfully installed:
 ```bash
-git clone https://github.com/arunes/prstats-cli.git
+prstats --version
 ```
 
-Go to the source code folder in your terminal, and publish:
-
+### Installing as a NET Tool
+To install PR Stats CLI as .NET tool:
+```bash
+dotnet tool install --global prstats-cli
 ```
-dotnet publish
+
+To verify PR Stats CLI was successfully installed:
+```bash
+prstats --version
 ```
 
 ## Usage

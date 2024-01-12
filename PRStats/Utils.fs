@@ -52,7 +52,7 @@ let checkPrequisites command hasSettings hasFetch =
 /// <param name="command">The command name</param>
 let printCommandHeader command =
     let version =
-        (appFolder, "prstats.exe") |> Path.Combine |> FileVersionInfo.GetVersionInfo
+        (appFolder, "prstats.dll") |> Path.Combine |> FileVersionInfo.GetVersionInfo
 
     printfn "prstats-cli v%d.%d - running '%s' command." version.ProductMajorPart version.ProductMinorPart command
     printfn ""

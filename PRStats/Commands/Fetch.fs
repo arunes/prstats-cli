@@ -92,7 +92,13 @@ module Fetch =
         <| $"Fetch completed! Fetched {prs.Length} pull requests and {reviewers.Length} reviewers records."
 
     let cmd =
+        let handler () =
+            try
+                run ()
+            with ex ->
+                Utils.printError <| ex.Message
+
         command "fetch" {
             description "Gets the latest data from your version controller."
-            setHandler run
+            setHandler handler
         }

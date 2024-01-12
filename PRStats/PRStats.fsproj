@@ -7,10 +7,27 @@
     <Version>0.1</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    
+    <PackageId>prstats-cli</PackageId>
+    <Product>PR Stats CLI</Product>
+    <PackageVersion>0.1.1</PackageVersion>
+    <Authors>arunes</Authors>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>prstats</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>terminal.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/arunes/prstats-cli/</PackageProjectUrl>
+    <PackageTags>pullrequest azuredevops pr prs prstats pullrequeststats azuredevops cli clitool</PackageTags>
+    <PackageReleaseNotes>https://github.com/arunes/prstats-cli/releases</PackageReleaseNotes>
+    
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="..\Reports\**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Link="Reports\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\terminal.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +42,8 @@
     <Compile Include="Commands\Setup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
+
+  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.28" />
