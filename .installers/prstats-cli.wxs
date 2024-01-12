@@ -13,6 +13,16 @@
 
     <Feature Id="Main">
       <ComponentGroupRef Id="AppFiles" />
+        <Component Id="SetEnvironment" Directory="INSTALLFOLDER" Guid="90e842bc-4f3f-4517-b008-159ecf5046ed">
+          <Environment
+            Id="PATH"
+            Name="PATH"
+            Value="[INSTALLFOLDER]"
+            Permanent="yes"
+            Part="last"
+            Action="set"
+            System="yes" />
+      </Component>
     </Feature>
   </Package>
 </Wix>
