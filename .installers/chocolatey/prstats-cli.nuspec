@@ -2,16 +2,19 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>prstats-cli</id>
-    <title>prstats-cli</title>
     <version>0.1</version>
-    <description>The PR Stats CLI is a command-line interface tool that you use to get stats about pull requests directly from a command shell.</description>
+    <title>PR Stats CLI</title>
     <authors>arunes</authors>
-    <summary>PR Stats CLI - The CLI tool for pull request stats</summary>
     <projectUrl>https://github.com/arunes/prstats-cli/</projectUrl>
-    <tags>pull requests,pr,azure devops,git</tags>
+    <projectSourceUrl>https://github.com/arunes/prstats-cli/</projectSourceUrl>
     <licenseUrl>https://raw.githubusercontent.com/arunes/prstats-cli/main/LICENSE</licenseUrl>
+    <tags>pullrequest azuredevops pr prs prstats pullrequeststats azuredevops cli clitool</tags>
+    <summary>PR Stats CLI - The CLI tool for pull request stats</summary>
+    <description>The PR Stats CLI is a command-line interface tool that you use to get stats about pull requests directly from a command shell.</description>
+    <releaseNotes>https://github.com/arunes/prstats-cli/releases</releaseNotes>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <iconUrl>https://github.com/arunes/prstats-cli/raw/main/terminal.png</iconUrl>
+    <packageSourceUrl>https://github.com/arunes/prstats-cli/tree/main/.installers/chocolatey</packageSourceUrl>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />
