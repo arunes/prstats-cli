@@ -16,17 +16,8 @@ _The PR Stats CLI is a command-line interface tool that you use to get stats abo
 
 ## Getting started
 
-You can download pre compiled cli tool from below, or you can build it from source.
+You can download pre compiled cli tool from [Releases](https://github.com/arunes/prstats-cli/releases), or you can build it from source.
 
-### Download
-
-| OS             | Download |
-| -------------- | -------- |
-| 64-bit macOS   | -        |
-| 64-bit Windows | -        |
-| 64-bit Linux   | -        |
-
-> If your OS is not listed here, you can build the project from the source code.
 
 ### Publishing from source
 
